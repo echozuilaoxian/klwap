@@ -1,0 +1,1 @@
+﻿<a href="/bbs/index.asp?SessionID=<%=SessionID%>">社区首页</a><br/>

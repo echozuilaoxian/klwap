@@ -1,0 +1,1 @@
+﻿<!--#include VIRTUAL="/bbs/ttic.asp"-->

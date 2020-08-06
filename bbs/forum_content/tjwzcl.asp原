@@ -1,0 +1,88 @@
+﻿<% @LANGUAGE="VBSCRIPT" CODEPAGE="65001" %><% Response.ContentType="text/vnd.wap.wml; charset=utf-8" %><?xml version="1.0" encoding="utf-8"?><!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
+<!--#INCLUDE VIRTUAL="/bbs/reg/useregs.asp"-->
+<!--#INCLUDE VIRTUAL="/bbs/public/codeun.asp"-->
+<wml>
+<head>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache"/>
+<meta http-equiv="Expires" content="Mon, 1 Jan 1990 00:00:00 GMT"/>
+</head>
+<%
+if Session("zh")="wap" then
+        response.redirect "/bbs/yksm.asp"
+      else
+        Session("ltlybz")=""
+    End if
+wap=request.querystring("wap")
+  dim name,memo,nai,lzdname
+  itid=Cstr(request("itid"))
+   if Clng(itid)<1 then
+       response.end
+   End if
+set objgbrsy=Server.CreateObject("ADODB.Recordset")
+rspl="select * from sclt where id="&itid
+objgbrsy.open rspl,conn,1,2
+if objgbrsy.eof then
+dlname="无此论坛"
+Else
+dlname=objgbrsy("name")
+end if
+objgbrsy.close
+Set objgbrsy= Nothing
+
+tjhm=Session("useid")
+  nai=request("nai")
+  lzdname=request("lzdname")
+  name=request("name")
+  memo=request("memo")
+  name=left(name,30)
+  name=trim(name)
+  memo=trim(memo)
+  btzz=Session("ltname")
+  name=untowide(name)
+  memo=untowide(memo)
+     if itid=80 and Session("yxxezb")="" and Session("yxxexc")="" and Session("bzbz")="" and Session("gly")="" and Session("Counter")<>"pass_numbers_55556666" then
+     response.write "<card id='card1' title='发表帖子不成功'><p>你非版主身份！请不要在版主区发表帖子"
+     response.write "<br/><a href='tjwz.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回继续操作</a><br/><a href='zcww.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回" & dlname & "</a><br/><a href='/bbs/index.asp?wap=" & wap & "'>返回社区首页</a></p></card></wml>"
+     response.end
+    End if
+
+     if Session("ltftzl")=memo then
+     response.write "<card id='card1' title='发表帖子不成功'><p>不能短时间发同样的文章！"
+     response.write "<br/><a href='tjwz.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回继续操作</a><br/><a href='zcww.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回" & dlname & "</a><br/><a href='/bbs/index.asp?wap=" & wap & "'>返回社区首页</a></p></card></wml>"
+     response.end
+    End if
+        Session("ltftzl")=memo
+		Session.Timeout=10
+  if name="" or memo="" then
+     response.write "<card id='card1' title='发表帖子不成功'><p><br/>主题或内容不能为空！"
+     response.write "<br/><a href='tjwz.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回继续操作</a><br/><a href='zcww.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回" & dlname & "</a><br/><a href='/bbs/index.asp?wap=" & wap & "'>返回社区首页</a></p></card></wml>"
+     response.end
+  End if
+If len(name)<4 and itid<>12 Then
+     response.write "<card id='card1' title='发表帖子不成功'><p>帖子标题字符少于4个字！"
+     response.write "<br/><a href='tjwz.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回继续操作</a><br/><a href='zcww.asp?itid=" & itid & "&amp;wap=" & wap & "'>返回" & dlname & "</a><br/><a href='/bbs/index.asp?wap=" & wap & "'>返回社区首页</a></p></card></wml>"
+     response.end
+  End if
+
+  sql="insert into wuza(itid,tjhm,biaoti,btzz,naiyo,lzdname)values("
+  sql=sql & sqlstr(itid) & ","
+  sql=sql & sqlstr(tjhm) & ","
+  sql=sql & sqlstr(name) & ","
+  sql=sql & sqlstr(btzz) & ","
+  sql=sql & sqlstr(memo) & ","
+sql=sql & sqlstr(lzdname) & ")"
+  Application.Lock
+  conn.execute sql
+sql="update jzbl set rc=rc+1 Where CStr(itid)='" & itid & "'"
+ Application.Lock
+  conn.execute sql
+  sql="update usereg set usejf=usejf+50,ticont=ticont+1,ml=ml+5,tili=tili+5 where CStr(id)='" & tjhm & "'"
+  conn.execute sql
+  Application.Unlock
+  conn.close
+  set conn=nothing
+  response.write "<card id='card1' title='发表文章' ontimer='zcww.asp?itid=" & itid & "&amp;wap=" & wap & "'><timer value='10'/><p align='left'>"
+  response.write "成功发表文章.<br/>恭喜您获得KY金币+50 积分+5 魅力+5 体力+5<br/><a href='zcww.asp?itid=" & itid & "&amp;wap=" & wap & "'>按这里继续完成发表</a><br/>返回" & dlname & "...."
+  response.write "<br/><br/><a href='/bbs/index.asp?wap=" & wap & "'>返回社区首页</a></p></card></wml>"
+ %>

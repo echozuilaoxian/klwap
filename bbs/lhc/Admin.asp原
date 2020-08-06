@@ -1,0 +1,160 @@
+﻿<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
+<%response.buffer=true%>
+<%Response.ContentType = "text/vnd.wap.wml; charset=utf-8"%>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
+<!--#include file="conn.inc"-->
+<!--#include file="cnscucsb.asp"-->
+<wml>
+<head>
+<meta http-equiv="Cache-Control" content="no-Cache"/>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Expires" content="Mon, 1 Jan 1990 00:00:00 GMT"/>
+</head>
+<card id="main" title="<%=ubb(title)%>-后台管理" >
+<p align='<%=duiji%>'>
+<%
+ if logo<>"" then 
+    response.write "<img src='"&logo&"' alt='"&ubb(Url)&"'/><br/>"&Now&""
+end if
+%>
+</p>
+<p align="left">
+
+<%
+if Cstr(Session("yxxezb"))<>"" or Cstr(Session("yxxexc"))<>"" or Session("Counter")="pass_numbers_55556666" then
+
+dim ky,kyzc
+  ky=request.querystring("ky")
+  kyzc=request.querystring("kyzc")
+  if ky="" then
+	ky=1
+  end if
+
+set objgbrc=Server.CreateObject("ADODB.Recordset")
+ssql6="select * from ckjhm"
+  objgbrc.open ssql6,myc,1,1
+if objgbrc.EOF then
+idsx="1"
+else
+objgbrc.movelast
+idsx=objgbrc("idss")+1
+objgbrc.close
+Set objgbrc= Nothing
+End if
+
+if ltmybz1<>"0" or mycjbz="1" then
+if cpkg="1" then yxxe_net_kg="开放|<a href='/bbs/LHC/kg.asp?pp=2&amp;SessionID="&SessionID&"'>关闭</a>"
+if cpkg="2" then yxxe_net_kg="关闭|<a href='/bbs/LHC/kg.asp?pp=1&amp;SessionID="&SessionID&"'>开放</a>"
+
+if ky="1" then
+%>
+第<b><%=idsx%></b>期开奖操作<br/>
+<%Response.write "<b>第"&idsx&"</b>期开奖时间:"&ubb(wel)&"<br/>"%>
+----------------<br/>
+开奖期数:<input  name="idd<%=minute(now)%><%=second(now)%>"  value="<%=idsx%>" format="*N"  size="7" maxlength="3"/><br/>
+开奖平码:<input name="pm" emptyok="false" value="00.00.00.00.00.00"  maxlength="50"/><br/>
+开奖特码:<input  name="tm"  value="1" format="*N"  size="20" maxlength="2"/><br/>
+开奖生肖:<select name='sx' value='猪'>
+<option value="鼠">鼠</option>
+<option value="牛">牛</option>
+<option value="虎">虎</option>
+<option value="兔">兔</option>
+<option value="龙">龙</option>
+<option value="蛇">蛇</option>
+<option value="马">马</option>
+<option value="羊">羊</option>
+<option value="猴">猴</option>
+<option value="鸡">鸡</option>
+<option value="狗">狗</option>
+<option value="猪">猪</option>
+</select><br/>
+开奖单双:<select name='ds' value='单'>
+<option value="单">单</option>
+<option value="双">双</option>
+</select><br/>
+开奖波色:<select name='ps' value='红'>
+<option value="红">红波</option>
+<option value="蓝">蓝波</option>
+<option value="绿">绿波</option>
+</select><br/>
+开奖大小:<select name='dx' value='大'>
+<option value="大">大</option>
+<option value="小">小</option>
+</select><br/>
+开奖五行:<select name='wx' value='土'>
+<option value="金">金行</option>
+<option value="木">木行</option>
+<option value="水">水行</option>
+<option value="火">火行</option>
+<option value="土">土行</option>
+</select><br/>
+<anchor>确定开奖
+<go method="post" href="/BBS/LHC/Admin.Asp?ky=2&amp;SessionID=<%=SessionID%>">
+<postfield name="ctm" value="$(tm)"/>
+<postfield name="cpm" value="$(pm)"/>
+<postfield name="csx" value="$(sx)"/>
+<postfield name="cds" value="$(ds)"/>
+<postfield name="cps" value="$(ps)"/>
+<postfield name="cdx" value="$(dx)"/>
+<postfield name="cwx" value="$(wx)"/>
+<postfield name="idd" value="$(idd<%=minute(now)%><%=second(now)%>)"/>
+</go>
+</anchor><br/>
+
+<%
+elseif ky="heip" then
+%>
+管理帮助<br/>
+-------------<br/>
+关于:<b><u>投注状态:开放|关闭</u></b><br/>
+如果是开奖日,请于晚上19:30左右进入后台点击关闭,这样网友就无法下注<br/>
+<br/>
+关于:<b><u>开奖期数:</u></b>没特殊原因不要变动！<br/>
+如果要开奖必须得到当期真实的开奖数据,并且认真填写开奖数据,确认无误后点击“<b><u>确定开奖</u></b>”即开奖完毕！若点击“<b><u>确定开奖</u></b>”长时间没反应,也不能再次点击,你必须返回博彩首页看当期的期数是否对应,如果期数不变那就证明刚才的操作无效,可返回继续操作, 尽量在最早时间(以现实六合开奖时间为准)内开奖
+
+<%elseif ky="2" then
+idd=request("idd")
+ctm=request("ctm")
+csx=request("csx")
+cds=request("cds")
+cps=request("cps")
+cdx=request("cdx")
+cwx=request("cwx")
+cpm=request("cpm")
+ky=request("ky")
+if ctm="" or csx="" or cds="" or cps="" or cdx="" or cwx="" or idd="" or cpm="" then
+  response.write "各项不能为空,请正确添写开奖结果<br/>--------------<br/><a href='/BBS/LHC/Admin.Asp?SessionID=" &SessionID & "'>返回彩票管理</a><br/><a href='/bbs/index.asp?SessionID=" &SessionID & "'>返回社区首页</a></p></card></wml>"
+response.end
+end if
+sql="insert into ckjhm(idss,pm,tm,ds,dx,ps,sx,wx)values("
+sql=sql & sqlstr(idd) & "," 
+sql=sql & sqlstr(cpm) & "," 
+sql=sql & sqlstr(ctm) & "," 
+sql=sql & sqlstr(cds) & "," 
+sql=sql & sqlstr(cdx) & "," 
+sql=sql & sqlstr(cps) & "," 
+sql=sql & sqlstr(csx) & "," 
+sql=sql & sqlstr(cwx) & ")"
+   myc.execute sql
+  response.write "第"&idd&"期 开奖完成!<br/>开奖结果："&cpm&"特"&ctm&"("&cds&"/"&cdx&"/"&cps&"/"&csx&"/"&cwx&")<br/>"
+%>
+<!--#include file="iXs_GetCode.asp"-->
+<%end if%>
+<%end if%>
+
+</p>
+<p align="center">
+投注状态:<%=yxxe_net_kg%><br/>
+<%end if%>
+--------------<br/>
+<a href="/BBS/LHC/Admin_system.asp?SessionID=<%=SessionID%>">网站设置</a>-<a href="/BBS/LHC/admin_affiche.asp?SessionID=<%=SessionID%>">公告管理</a><br/>
+<a href="/BBS/LHC/Admin.Asp?ky=heip&amp;SessionID=<%=SessionID%>">相关帮助</a>-<a href="/BBS/LHC/Cai_Usegl.asp?SessionID=<%=SessionID%>">彩迷管理</a><br/>
+<a href="/BBS/LHC/Cai_Usegl.asp?SessionID=<%=SessionID%>&amp;Action=delky">删除数据</a>-<a href="/BBS/LHC/Index.Asp?SessionID=<%=SessionID%>">虚拟博彩</a><br/>
+--------------<br/>
+<a href="/BBS/index.asp?SessionID=<%=SessionID%>">返回社区首页</a><br/>
+报时:<%=time%>
+</p></card></wml>
+<%
+myc.close
+set myc=nothing%>
